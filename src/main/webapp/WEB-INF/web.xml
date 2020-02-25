@@ -4,8 +4,8 @@
         <servlet-name>ProcessorDataServlet</servlet-name>
         <servlet-class>com.assignment.assignment_web_data.ProcessorDataServlet</servlet-class>
         <init-param>
-            <param-name>wikipeadiaWarcFilePath</param-name>
-            <param-value>D:\Programmi\Tirocinio\web-app\assignment_web_data\src\main\java\com\assignment\assignment_web_data\data\task_1.warc</param-value>
+            <param-name>wikipeadiaPagesPath</param-name>
+            <param-value>D:\Programmi\Tirocinio\web-app\assignment_web_data\src\main\java\com\assignment\assignment_web_data\data\</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>
