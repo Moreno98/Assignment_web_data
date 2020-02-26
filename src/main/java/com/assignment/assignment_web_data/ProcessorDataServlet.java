@@ -113,6 +113,17 @@ public class ProcessorDataServlet extends HttpServlet {
                         request.setAttribute("message", "10 " + type + " frequence word on page" + request.getParameter("dataSelection"));
                         request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
                         break;
+                    case "Create a word cloud":
+                        Gson gson3 = new Gson();
+                        String values2 = gson3.toJson(map.values().toArray());
+                        String keys2 = gson3.toJson(map.keySet().toArray());
+                        
+                        request.setAttribute("map", map);
+                        request.setAttribute("keys", keys2);
+                        request.setAttribute("values", values2);
+                        request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
+                        request.getRequestDispatcher("displayWordCloud.jsp").forward(request, response);
+                        break;
                     default:
                         break;
                 }
