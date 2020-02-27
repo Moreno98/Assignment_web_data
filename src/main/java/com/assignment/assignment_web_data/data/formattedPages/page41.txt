@@ -1,0 +1,15 @@
+Aberdeen NNP
+disambiguation NN
+Aberdeen NNP
+is VBZ
+a DT
+city NN
+in IN
+Scotland NNP
+United NNP
+Kingdom NNP
+Aberdeen NNP
+may MD
+also RB
+refer VB
+to TO

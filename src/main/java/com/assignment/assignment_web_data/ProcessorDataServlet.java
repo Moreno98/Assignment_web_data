@@ -41,98 +41,103 @@ public class ProcessorDataServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String warcFile = getServletConfig().getInitParameter("wikipeadiaPagesPath") + "page" + request.getParameter("dataSelection") + ".txt";
-        try(Reader fileReader = new FileReader(warcFile)) {
-            try{
-                BufferedReader reader = new BufferedReader(fileReader);
-                String line = reader.readLine();
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String wikiPage = getServletConfig().getInitParameter("pagesPath") + "\\wikipediaPages\\" + "page" + request.getParameter("dataSelection") + ".txt"; 
+        String formattedPage = getServletConfig().getInitParameter("pagesPath") + "\\formattedPages\\" + "page" + request.getParameter("dataSelection") + ".txt";   
+        
+        //printHashMap(map);
+        Reader fileWikiReader = new FileReader(wikiPage);  
+        Reader fileFormattedReader = new FileReader(formattedPage);
+        switch (request.getParameter("action")) {
+            case "Calculate word frequency":
+                BufferedReader reader = new BufferedReader(fileWikiReader);
+                Map<String, Integer> map;
+                map = getFrequencies(reader);
                 
-                StringTokenizer tokenizer = new StringTokenizer(line);
-                List<String> list = getList(tokenizer);
-                
-                Map<String, Integer> map = new HashMap<>();
-                
-                for (String word : list) {
-                    Integer n = map.get(word);
-                    n = (n == null) ? 1 : ++n;
-                    map.put(word, n);
+                String values = calculateJson(map.values().toArray());
+                String keys = calculateJson(map.keySet().toArray());                
+
+                request.setAttribute("keys", keys);
+                request.setAttribute("values", values);
+                request.setAttribute("length", values.length()*50);
+                request.setAttribute("type", "horizontal: true");
+                request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
+                request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
+                break;
+            case "Stats on 10 most word frequency":
+            case "Stats on 10 least word frequency":
+                BufferedReader reader2 = new BufferedReader(fileWikiReader);
+                Map<String, Integer> map2;
+                map2 = getFrequencies(reader2);
+                Map<String, Integer> sortedMap;
+                String type;
+                if(request.getParameter("action").equals("Stats on 10 most word frequency")){
+                    sortedMap = sortByComparator(map2, false);
+                    type = "most";
+                }else{
+                    sortedMap = sortByComparator(map2, true);
+                    type = "least";
                 }
+
+                Object[] sorted = sortedMap.values().toArray();
+                Object[] value;
+
+                Object[] set = sortedMap.keySet().toArray();
+                Object[] key;
+
+                if(sorted.length >= 10){
+                    value = new Object[10];
+                    key = new Object[10];
+                    System.arraycopy(sorted, 0, value, 0, 10);
+                    System.arraycopy(set, 0, key, 0, 10);
+                }else{
+                    value = new Object[sorted.length];
+                    key = new Object[sorted.length];
+                    System.arraycopy(sorted, 0, value, 0, sorted.length);
+                    System.arraycopy(set, 0, key, 0, sorted.length);
+                }                       
                 
-                //printHashMap(map);
-                switch (request.getParameter("action")) {
-                    case "Calculate word frequency":
-                        Gson gson = new Gson();
-                        String values = gson.toJson(map.values().toArray());
-                        String keys = gson.toJson(map.keySet().toArray());
-                        
-                        request.setAttribute("keys", keys);
-                        request.setAttribute("values", values);
-                        request.setAttribute("length", values.length()*50);
-                        request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
-                        request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
-                        break;
-                    case "Stats on 10 most word frequency":
-                    case "Stats on 10 least word frequency":
-                        Map<String, Integer> sortedMap;
-                        String type;
-                        if(request.getParameter("action").equals("Stats on 10 most word frequency")){
-                            sortedMap = sortByComparator(map, false);
-                            type = "most";
-                        }else{
-                            sortedMap = sortByComparator(map, true);
-                            type = "least";
-                        }
-                        
-                        Object[] sorted = sortedMap.values().toArray();
-                        Object[] value;
-                        
-                        Object[] set = sortedMap.keySet().toArray();
-                        Object[] key;
-                        
-                        if(sorted.length >= 10){
-                            value = new Object[10];
-                            key = new Object[10];
-                            System.arraycopy(sorted, 0, value, 0, 10);
-                            System.arraycopy(set, 0, key, 0, 10);
-                        }else{
-                            value = new Object[sorted.length];
-                            key = new Object[sorted.length];
-                            System.arraycopy(sorted, 0, value, 0, sorted.length);
-                            System.arraycopy(set, 0, key, 0, sorted.length);
-                        }                        
-                        
-                        Gson gson2 = new Gson();
-                        String v = gson2.toJson(value);
-                        String k = gson2.toJson(key);
-                        
-                        request.setAttribute("keys", k);
-                        request.setAttribute("values", v);
-                        request.setAttribute("length", 800);
-                        request.setAttribute("message", "10 " + type + " frequence word on page" + request.getParameter("dataSelection"));
-                        request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
-                        break;
-                    case "Create a word cloud":
-                        Gson gson3 = new Gson();
-                        String values2 = gson3.toJson(map.values().toArray());
-                        String keys2 = gson3.toJson(map.keySet().toArray());
-                        
-                        request.setAttribute("map", map);
-                        request.setAttribute("keys", keys2);
-                        request.setAttribute("values", values2);
-                        request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
-                        request.getRequestDispatcher("displayWordCloud.jsp").forward(request, response);
-                        break;
-                    default:
-                        break;
-                }
+                String v = calculateJson(value);
+                String k = calculateJson(key);
+
+                request.setAttribute("keys", k);
+                request.setAttribute("values", v);
+                request.setAttribute("length", 800);
+                request.setAttribute("type", "vertical: true");
+                request.setAttribute("message", "10 " + type + " frequence word on page" + request.getParameter("dataSelection"));
+                request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
+                break;
+            case "Create a word cloud":
+                BufferedReader reader3 = new BufferedReader(fileWikiReader);
+                Map<String, Integer> map3;
+                map3 = getFrequencies(reader3);
+
+                String values2 = calculateJson(map3.values().toArray());
+                String keys2 = calculateJson(map3.keySet().toArray());
+
+                request.setAttribute("keys", keys2);
+                request.setAttribute("values", values2);
+                request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
+                request.getRequestDispatcher("displayWordCloud.jsp").forward(request, response);
+                break;
+            case "Bucketing":
+                BufferedReader formattedReader = new BufferedReader(fileFormattedReader);
+                Map<String, Integer> bucketsMap;
+                bucketsMap = bucketing(formattedReader);
+                int total = bucketsMap.get("Total");
+                bucketsMap.remove("Total");
                 
-                
-                reader.close();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
+                String values3 = calculateJson(bucketsMap.values().toArray());
+                String keys3 = calculateJson(bucketsMap.keySet().toArray());
+
+                request.setAttribute("keys", keys3);
+                request.setAttribute("values", values3);                
+                request.setAttribute("percentages", getPercentage(total, bucketsMap));
+                request.setAttribute("message", "Page" + request.getParameter("dataSelection"));
+                request.getRequestDispatcher("displayBuckets.jsp").forward(request, response);            
+                break;
+            default:
+                break;
         }    
     }
     
@@ -232,5 +237,85 @@ public class ProcessorDataServlet extends HttpServlet {
             System.out.println(pair.getKey() + " = " + pair.getValue());
             it.remove(); // avoids a ConcurrentModificationException
         }
+    }
+    
+    private Map<String, Integer> getFrequencies(BufferedReader reader) throws IOException{
+        String line = reader.readLine();
+                
+        StringTokenizer tokenizer = new StringTokenizer(line);
+        List<String> list = getList(tokenizer);
+
+        Map<String, Integer> map = new HashMap<>();
+
+        for (String word : list) {
+            Integer n = map.get(word);
+            n = (n == null) ? 1 : ++n;
+            map.put(word, n);
+        }
+        reader.close();
+        return map;
+    }
+    
+    private Map<String, Integer> bucketing(BufferedReader reader) throws IOException{
+        
+        Map<String, Integer> map = new HashMap<>();
+        String line = reader.readLine();
+        
+        Map<String,String> TagList;
+        TagList = populateTagList();
+        
+        int total = 0;
+        while(line != null){
+            total++;
+            StringTokenizer tokenizer = new StringTokenizer(line);
+            List<String> list = getList(tokenizer);
+            String tag = TagList.get(list.get(1));
+            tag = (tag == null) ? list.get(1) : tag;
+            Integer n = map.get(tag);
+            n = (n == null) ? 1 : ++n;
+            map.put(tag, n);
+            line = reader.readLine();
+            
+        }
+        
+        map.put("Total", total);
+        reader.close();
+        return map;
+    }
+    
+    private Map<String,String> populateTagList(){
+        Map<String,String> list = new HashMap<>();
+        //Description from https://spacy.io/api/annotation#pos-tagging
+        list.put("$","Currency ($)");list.put("ADD","Email (ADD)");list.put("AFX","Affix (AFX)");
+        list.put("CC","Conjunction (CC)");list.put("CD","Cardinal number (CD)");list.put("DT","Determiner (DT)");
+        list.put("EX","Existential there (EX)");list.put("FW","Foreign word (FW)");list.put("GW","Additional word in multi-word expression (GW)");
+        list.put("HYPH","Punctuation mark (HYPH)");list.put("IN","Conjunction (IN)");list.put("JJ","Adjective (JJ)");
+        list.put("JJR","Comparative Adjective (JJR)");list.put("JJS","Superlative Adjective (JJS)");list.put("LS","List item marker (LS)");
+        list.put("MD","Modal auxiliary verb (MD)");list.put("NFP","superfluous punctuation (NFP)");list.put("NIL","Missing tag (NIL)");
+        list.put("NN","Noun (NN)");list.put("NNP","Proper singular noun (NNP)");list.put("NNPS","Proper plural noun (NNPS)");
+        list.put("NNS","Plural noun (NNS)");list.put("PDT","Predeterminer (PDT)");list.put("POS","Possessive ending (POS)");
+        list.put("PRP","Personal pronoun (PRP)");list.put("PRP$","Possessive pronoun (PRP$)");list.put("RB","Adverb (RB)");
+        list.put("RBR","Comparative adverb (RBR)");list.put("RBS","Superlative adverb (RBS)");list.put("RP","Particle adverb (RP)");
+        list.put("SYM","Symbol (SYM)");list.put("TO","Infinitival \"to\" (TO)");list.put("UH","Interjection (UH)");
+        list.put("VB","Verb, base form (VB)");list.put("VBD","Verb, past tense (VBD)");list.put("VBG","Verb, gerund or present participle (VBG)");
+        list.put("VBN","Verb, past participle (VBN)");list.put("VBP","Verb, non-3rd person singular present (VBP)");list.put("VBZ","Verb, 3rd person singular present (VBZ)");
+        list.put("WDT","Wh-determiner (WDT)");list.put("WP","Wh-pronoun, personal (WP)");list.put("WP$","Wh-pronoun, possessive (WP$)");
+        list.put("WRB","Wh-adverb (WRB)");list.put("X","Unknown (X)");
+        return list;        
+    }
+    
+    private List<Double> getPercentage(int total, Map<String,Integer> map){
+        List<Double> percentages = new ArrayList<>();
+        Object[] values = map.values().toArray();
+        for (Object value1 : values) {
+            double value = (double) ((int) value1) / total;
+            percentages.add(value*100);
+        }        
+        return percentages;
+    }
+    
+    private String calculateJson(Object[] object){
+        Gson gson = new Gson();
+        return gson.toJson(object);
     }
 }

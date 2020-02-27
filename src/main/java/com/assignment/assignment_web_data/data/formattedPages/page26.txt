@@ -1,0 +1,15 @@
+Austin NNP
+disambiguation NN
+Austin NNP
+is VBZ
+an DT
+English JJ
+language NN
+contracted VBD
+form NN
+of IN
+Augustine NNP
+Austin NNP
+may MD
+refer VB
+to TO

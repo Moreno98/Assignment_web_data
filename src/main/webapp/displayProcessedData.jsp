@@ -1,4 +1,3 @@
-<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%-- 
     Document   : displayProcessedData
@@ -32,16 +31,16 @@
                 },
                 plotOptions: {
                   bar: {
-                    horizontal: true,
+                    <%=request.getAttribute("type")%>
                   }
                 },
                 dataLabels: {
                   enabled: false
                 },
                 xaxis: {
-                        categories: <%=request.getAttribute("keys")%>,
+                        categories: <%=request.getAttribute("keys")%>
                     },lines: {
-                        show: true,
+                        show: true
                     }
                 };
 
@@ -49,4 +48,5 @@
                 chart.render();
               };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 </html>

@@ -11,14 +11,12 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Word Cloud</title>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
         <style>
             html, body, #container {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
             }
         </style>
     </head>
@@ -56,4 +54,6 @@
             chart.draw();
         });
     </script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-tag-cloud.min.js"></script>
 </html>

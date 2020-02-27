@@ -22,6 +22,7 @@ public class PageParser {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.FileNotFoundException
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         String workingDirectory = System.getProperty("user.dir");
@@ -29,6 +30,33 @@ public class PageParser {
         
         String filePath = workingDirectory + "task_1.warc";
         Reader fileReader = new FileReader(filePath);
+        
+        boolean thirdColumn = true;
+        
+        if(thirdColumn){
+            workingDirectory += "\\formattedPages\\";
+        }else{
+            workingDirectory += "\\wikipediaPages\\";
+        }
+        
+        createPages(fileReader, workingDirectory, thirdColumn);
+    }
+    
+    private static String findNewData(String line, BufferedReader reader) throws IOException{
+        while(line.length() == 0 || line.charAt(0) != '1'){
+            line = reader.readLine();
+        }
+        return line;
+    }
+    
+    /**
+     * This method creates pages for each wikipedia pages founded in the dataset.
+     * @param fileReader The file reader of the dataset
+     * @param workingDirectory The working directory
+     * @param thirdColumn If true it takes also the third column (NNP, VBZ, DT, NN ...) else it takes only the word
+     * @throws IOException 
+     */
+    private static void createPages(Reader fileReader, String workingDirectory, final Boolean thirdColumn) throws IOException{
         BufferedReader reader = new BufferedReader(fileReader);
         String line = reader.readLine();
         int count = 0;
@@ -51,19 +79,16 @@ public class PageParser {
             if(!line.isEmpty()){
                 String[] element = line.split("\t");
                 if(!element[1].matches(".*[^A-Za-z].*")){
-                    writer.write(element[1] + " ");
+                    if(thirdColumn){
+                        writer.write(element[1] + " " + element[2] + "\n");
+                    }else{
+                        writer.write(element[1] + " ");
+                    }                    
                 }                
             }   
             line = reader.readLine();
         }
         writer.close();
-    }
-    
-    private static String findNewData(String line, BufferedReader reader) throws IOException{
-        while(line.length() == 0 || line.charAt(0) != '1'){
-            line = reader.readLine();
-        }
-        return line;
     }
     
 }
