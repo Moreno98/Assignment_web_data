@@ -14,14 +14,15 @@
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     </head>
     <body>
-        <h2 class="text-center">Buckets frequencies</h2>
+        <h2 class="text-center">Buckets frequency</h2>
         <h4 class="text-center">${requestScope.message}</h4>
         <div id="chart"></div>
         <hr>
         <div id="pie" class="text-center"></div>
     </body>
     <script>
-        window.onload = function() { 
+        window.onload = function() {
+            //Bar chart:
             var options = {
                 series: [{
                     data: <%=request.getAttribute("values")%>
@@ -53,6 +54,7 @@
             var keys = <%=request.getAttribute("keys")%>;
             var dataPoints = [];
             var i = 0;
+            //Create the specific format for pie chart
             while(i < keys.length) {
                 var j = {"label": keys[i], "y": values[i]};
                 dataPoints.push(j);

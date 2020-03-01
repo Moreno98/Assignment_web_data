@@ -1,7 +1,0 @@
-Ada NNP
-Ada NNP
-ADA NN
-or CC
-may MD
-refer VB
-to TO

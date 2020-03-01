@@ -34,6 +34,9 @@
             var keys = <%=request.getAttribute("keys")%>;
             var data = [];
             var i = 0;
+            //This cycle creates an array with this format:
+            //{"x": key, "value": value}
+            //This format is required from the chart library.
             while(i < keys.length) {
                 var j = {"x": keys[i], "value": values[i]};
                 data.push(j);
@@ -49,8 +52,6 @@
             chart.colorRange(false);
             // set the color range length
             chart.colorRange().length('100%');
-
-
             // display the word cloud chart
             chart.container("container");
             chart.draw();
