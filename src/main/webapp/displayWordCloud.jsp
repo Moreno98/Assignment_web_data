@@ -27,6 +27,9 @@
         <h4 class="text-center">${requestScope.message}</h4>
         <br>
         <div id="container"></div>
+        <div class="text-center">
+            <a href="index.html" class="btn btn-primary">Home</a>
+        </div>
     </body>
     <script>
         anychart.onDocumentReady(function() {

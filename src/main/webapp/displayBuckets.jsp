@@ -16,9 +16,12 @@
     <body>
         <h2 class="text-center">Buckets frequency</h2>
         <h4 class="text-center">${requestScope.message}</h4>
+        <div class="text-center">
+            <a href="index.html" class="btn btn-primary">Home</a>
+        </div>
         <div id="chart"></div>
         <hr>
-        <div id="pie" class="text-center"></div>
+        <div id="pie" class="text-center"></div>        
     </body>
     <script>
         window.onload = function() {

@@ -17,8 +17,11 @@
     <body>
         <h2 class="text-center">Word Frequency</h2>
         <h4 class="text-center">${requestScope.message}</h4>
+        <div class="text-center">
+            <a href="index.html" class="btn btn-primary">Home</a>
+        </div>
         <!--Div for the chart:-->
-        <div id="chart"></div>
+        <div id="chart"></div>               
     </body>
     <script>
         //Creating the chart based on the processed data from the back-end
