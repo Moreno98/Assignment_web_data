@@ -71,7 +71,7 @@ public class ProcessorDataServlet extends HttpServlet {
                 request.setAttribute("values", v);
                 request.setAttribute("length", 800);
                 request.setAttribute("type", "vertical: true");
-                request.setAttribute("message", "10 " + type + " frequence word on page " + request.getParameter("pageTitle"));
+                request.setAttribute("message", "10 " + type + " frequency word on page " + request.getParameter("pageTitle"));
                 //Opening the page:
                 request.getRequestDispatcher("displayProcessedData.jsp").forward(request, response);
                 break;
