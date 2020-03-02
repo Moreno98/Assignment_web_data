@@ -9,7 +9,7 @@ Brief introduction to the app: [Introduction](Introduction.md)
 
 ### Steps:
 * Clone the repository
-* Go to [src/main/webapp/WEB-INF/web.xml](src/main/webapp/WEB-INF/web.xml) and modify pagesPath parameter to the absolute path for the [data folder](/src/main/java/com/assignment/assignment_web_data/data/) of this project.
+* Go to [src/main/webapp/WEB-INF/web.xml](src/main/webapp/WEB-INF/web.xml) and modify pagesPath parameter to the absolute path for the [data folder](/src/main/java/com/assignment/assignment_web_data/data/) of this project <br> (e.g. \<param-value> **C:/Programs/Assignment_web_data/src/main/java/com/assignment/assignment_web_data/data/** \</param-value>).
 * Open Netbeans
 * Go to tools>plugins and install Java EE Base plugin
 * Open services (Window>Services) and on Servers add a new Tomcat server
