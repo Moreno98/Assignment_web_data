@@ -30,8 +30,8 @@ public class ProcessorDataServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String wikiPage = getServletConfig().getInitParameter("pagesPath") + "\\wikipediaPages\\" + request.getParameter("pageTitle") + ".txt"; 
-        String formattedPage = getServletConfig().getInitParameter("pagesPath") + "\\formattedPages\\" + request.getParameter("pageTitle") + ".txt";   
-
+        String formattedPage = getServletConfig().getInitParameter("pagesPath") + "\\formattedPages\\" + request.getParameter("pageTitle") + ".txt";
+        
         //Processing the correct data based on the button clicked on the frontend ("action")
         switch (request.getParameter("action")) {
             case "Calculate word frequency":

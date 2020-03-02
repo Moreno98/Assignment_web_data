@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- *
+ * This class pars the warc file and extract the useful data.
  * @author moren
  */
 public class PageParser {
@@ -42,6 +42,13 @@ public class PageParser {
         createPages(fileReader, workingDirectory, thirdColumn);
     }
     
+    /**
+     * This method returns the first line starting with a number (means the beginning of new words)
+     * @param line The current line
+     * @param reader The reader
+     * @return The new line
+     * @throws IOException 
+     */
     private static String findNewData(String line, BufferedReader reader) throws IOException{
         while(line.length() == 0 || line.charAt(0) != '1'){
             line = reader.readLine();
