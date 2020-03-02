@@ -5,7 +5,7 @@
         <servlet-class>com.assignment.assignment_web_data.ProcessorDataServlet</servlet-class>
         <init-param>
             <param-name>pagesPath</param-name>
-            <param-value>Insert_data_folder_path_here
+            <param-value>Insert_data_folder_absolute_path_here
         </init-param>
     </servlet>
     <servlet-mapping>
