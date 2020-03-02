@@ -51,7 +51,7 @@
             // enable a color range
             chart.colorRange(false);
             // set the color range length
-            chart.colorRange().length('100%');
+            chart.colorRange().length('80%');
             // display the word cloud chart
             chart.container("container");
             chart.draw();
